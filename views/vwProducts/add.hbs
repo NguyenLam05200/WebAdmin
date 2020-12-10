@@ -24,7 +24,7 @@
         </label>
         <select class="form-control" id="exampleFormControlSelect1" name="selectCat">
           {{#each categories}}
-            <option value="{{_id}}">
+            <option value="{{name}}">
               {{name}}
             </option>
           {{/each}}
@@ -33,6 +33,25 @@
       <div class="form-group">
         <label for="txtCatName">
           Price
+        </label>
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+            $
+          </span>
+          <span class="input-group-text">
+            0.00
+          </span>
+          <input
+            type="number"
+            class="form-control"
+            id="txtCatName"
+            name="price"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="txtCatName">
+          Sale Price
         </label>
         <div class="input-group-prepend">
           <span class="input-group-text">
@@ -61,17 +80,6 @@
             Choose file
           </label>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="txtCatName">
-          Tiny Describe
-        </label>
-        <input
-          type="text"
-          class="form-control"
-          id="txtCatName"
-          name="tinyDes"
-        />
       </div>
       <div class="form-group">
         <label for="exampleFormControlTextarea1">
