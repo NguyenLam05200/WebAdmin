@@ -1,0 +1,48 @@
+<div class="card">
+  <div class="card-header d-flex justify-content-between">
+    <h4>
+      Products
+    </h4>
+    <a class="btn btn-outline-success" href="/admin/products/add" role="button">
+      <i class="fa fa-plus" aria-hidden="true"></i>
+      Add Product
+    </a>
+  </div>
+  {{#if this.empty}}
+    <div class="card-body">
+      <p class="card-text">
+        Không có dữ liệu.
+      </p>
+    </div>
+  {{else}}
+    <div class="card-body">
+      <div class="row">
+        {{#each this.products}}
+          <div class="col-sm-4 mb-3">
+            <div class="card h-100">
+              <img src="/public/imgs/sp/{{_id}}/small.jpg" alt="{{name}}" title="{{name}}:{{price}}" class="card-img-top">
+              <div class="card-body">
+                <h6 class="card-title">{{name}}</h6>
+                <h4 class="card-title text-danger">{{format_number price}}</h4>
+                <p class="card-text">{{tinyDes}}</p>
+              </div>
+              <div class="card-footer">
+                <a class="btn btn-sm btn-outline-primary" href="javascript:;" role="button">
+                  <i class="fa fa-eye" aria-hidden="true"></i>
+                  Details
+                </a>
+                <a class="btn btn-sm btn-outline-success" href="javascript:;" role="button">
+                  <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                  Add to cart
+                </a>
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+  <div class="card-footer text-muted">
+    Footer
+  </div>
+</div>

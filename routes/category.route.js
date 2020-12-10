@@ -8,7 +8,7 @@ const categoryModel = require('../models/category.model');
 const router = express.Router();
 
 router.get('/', async function (req, res) {
-    const list = await categoryModel.all();
+    const list = await categoryModel.getAll();
 
     res.render('vwCategories/list', {
         categories: list,
@@ -21,63 +21,35 @@ router.get('/add', function (req, res) {
 })
 
 router.post('/add', async (req, res) => {
-    console.log(req.body)
-    var category = categoryModel.Category({
-        Name: req.body.CatName
-    });
-    console.log(category);
-    try {
-        await category.save();
-        res.send(category);
-
-        res.redirect("vwCategories/list");
-    } catch (err) {
-        res.status(500).send(err);
-    }
-
-    
-    // var category = categoryModel.Category({
-    //     Name: req.body.CatName
-    // });
-    // console.log(category);
-    // // category.save(function (err, book) {
-    // //     if (err) return console.error(err);
-    // //     console.log(category.Name + " saved to bookstore collection.");
-    // //   });
-
-    // category.save(function (err) {
-    //     if (err) {
-    //         console.log("err");
-    //         res.json({
-    //             "kq": 0,
-    //             "errMsg": err
-    //         });
-    //     } else {
-    //         console.log("not err");
-    //         res.json({
-    //             "kq": 1
-    //         });
-    //         console.log(req.body);
-    //         res.send('ok');
-    //     }
-    // })
-    // // const err = await categoryModel.save(req.body.CatName);
-    // // if (err) {
-    // //     res.json({
-    // //         "kq": 0,
-    // //         "errMsg": err
-    // //     });
-    // // } else {
-    // //     res.json({
-    // //         "kq": 1
-    // //     });
-    // //     console.log(req.body);
-    // //     res.send('ok');
-    // // }
-    // // console.log("err: " + err);
-
+    const result = await categoryModel.addOne(req.body);
+    //console.log(result);
+    res.redirect('./');
 });
 
+//chưa xử lí view error nếu query != String of 12 bytes or a string of 24 hex characters 
+router.get('/edit', async function (req, res) {
+    const id = req.query.id || -1;
+    const category = await categoryModel.getOne(id);
+    // if(category == null){
+    //     return res.send("Query string is not invalid");
+    // } else {
+    //     return res.render('vwCategories/edit', {
+    //         category
+    //     });
+    // }
+    res.render('vwCategories/edit', {
+        category
+    });
+})
 
+router.post('/del', async (req, res) => {
+    await categoryModel.delOne(req.body);
+    res.redirect('./');
+});
+
+router.post('/update', async (req, res) => {
+    await categoryModel.patchOne(req.body);
+    res.redirect('./');
+});
 
 module.exports = router;
