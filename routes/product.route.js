@@ -34,7 +34,7 @@ var upload = multer({
 
 router.get('/', async function (req, res) {
     const list = await productModel.all();
-
+    console.log(list);
     res.render('vwProducts/list', {
         products: list,
         empty: list.length === 0
