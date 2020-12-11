@@ -17,20 +17,21 @@ var storage = multer.diskStorage({
       cb(null, 'public/imgs/sp')
     },
     filename: function (req, file, cb) {
+        console.log("name" + file.originalname);
       cb(null, Date.now()  + "-" + file.originalname)
     }
 });  
 var upload = multer({ 
     storage: storage,
     fileFilter: function (req, file, cb) {
-        //console.log(file);
+        console.log("file:" + file);
         if(file.mimetype=="image/bmp" || file.mimetype=="image/png" || file.mimetype=="image/jpeg" || file.mimetype=="image/jpg" || file.mimetype=="image/gif"){
             cb(null, true)
         }else{
             return cb(new Error('Only image are allowed!'))
         }
     }
-}).single("marvelImage");
+}).single("imgProduct"); // imgProduct is name in view vwProducts/add.hbs
 
 router.get('/', async function (req, res) {
     const list = await productModel.all();
@@ -68,10 +69,36 @@ router.get('/add',async function (req, res) {
 });
 
 router.post('/add', async (req, res) => {
-    console.log(req.body);
-    //const result = await productModel.addOne(req.body);
-    //console.log(result);
-    res.redirect('./');
+    //upload file
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          console.log({"kq":0, "errMsg":"A multer error occured when uploading."}); 
+        } else if (err) {
+          console.log({"kq":0, "errMsg":"An unknown error occurred when uploading." + err});
+        }else{
+            //save mongo
+            console.log(req.body);
+            // var marvel = Marvel({
+            //     Name: req.body.txtName,
+            //     Image: req.file.filename,
+            //     Level: req.body.txtLevel
+            // });
+
+            // marvel.save(function(err){
+            //     if(err){
+            //         res.json({"kq":0, "errMsg":error});
+            //     } else{
+            //         res.redirect("/add");
+            //     }
+            // });
+            res.send("done");
+        }
+
+    });
+    // console.log(req.body);
+    // //const result = await productModel.addOne(req.body);
+    // //console.log(result);
+    // res.redirect('./');
 });
 
 module.exports = router;

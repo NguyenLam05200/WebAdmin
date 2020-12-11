@@ -1,8 +1,8 @@
 const { MongoClient } = require("mongodb");
-const dbName = "BaggageDB";
-const uri = 'mongodb+srv://BaggageDB:rcBHKNQw7xcTBtL3@cluster0.edx0y.mongodb.net/' + dbName + '?retryWrites=true&w=majority';
+const dbName = process.env.databaseName;
+const URI = process.env.URI;
 // Create a new MongoClient
-const client = new MongoClient(uri, { useUnifiedTopology: true });
+const client = new MongoClient(URI, { useUnifiedTopology: true });
 
 let database;
 

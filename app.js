@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require('express');
 const exphbs = require('express-handlebars');
 require('express-async-errors');
@@ -24,6 +26,8 @@ app.engine('hbs', exphbs({
 app.set('view engine', 'hbs');
 
 app.use('/public', express.static("public"));
+app.use(express.static("public"));
+
 
 const categoryModel = require('./models/category.model');
 
@@ -66,7 +70,7 @@ app.use(function(err, req, res, next){
 
 
 
-const PORT = 3000;
+var PORT = process.env.PORT || 3000;
 app.listen(PORT, function () {
     console.log(`Server is running at http://localhost:${PORT}`);
 })
