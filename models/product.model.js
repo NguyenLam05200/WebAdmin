@@ -9,10 +9,11 @@ const nameCollection = "Products";
 var mongoose = require("mongoose");
 
 var schemaProduct = new mongoose.Schema({
+    _id: ObjectId,
     name: String,
     price: Number,
-    category: ObjectId,
-    tinyDes: String, //mo ta so luoc sp
+    salePrice: Number,
+    category: String,
     details: String
 });
 
@@ -21,6 +22,7 @@ var schemaProduct = new mongoose.Schema({
 const Product = mongoose.model(nameCollection, schemaProduct);
 
 module.exports = {
+    ObjectId,
     all: async () => {
         const proCollection = db().collection(nameCollection);
         const list = await proCollection.find({}).toArray();
@@ -35,15 +37,17 @@ module.exports = {
         //console.log(list);
         return list;
     },
-    addOne: async (data) => {
+    addOne: async (data, _id) => {
+        console.log("---" +_id);
         var newPro = new Product({
+            _id: _id,
             name: data.name,
             price: data.price,
-            category: ObjectId(data.selectCat),
-            tinyDes: data.tinyDes, //mo ta so luoc sp
+            salePrice: data.salePrice,
+            category: data.selectCat,
             details: data.details
         });
-        console.log(newPro);
+        //console.log(newPro);
         const catCollection = db().collection(nameCollection);
         return await catCollection.insertOne(newPro);
     }

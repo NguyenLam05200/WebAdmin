@@ -12,19 +12,22 @@ const router = express.Router();
 
 //multer
 var multer  = require('multer');
+let _id;
+let extension = 'jpg';
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/imgs/sp')
+      cb(null, 'public/images/products')
     },
     filename: function (req, file, cb) {
-        console.log("name" + file.originalname);
-      cb(null, Date.now()  + "-" + file.originalname)
+        //let extArray = file.mimetype.split("/");
+        //extension = extArray[extArray.length - 1];
+        _id = new productModel.ObjectId();
+      cb(null, _id.toString() + '.' + extension)
     }
 });  
-var upload = multer({ 
+var upload = multer({
     storage: storage,
     fileFilter: function (req, file, cb) {
-        console.log("file:" + file);
         if(file.mimetype=="image/bmp" || file.mimetype=="image/png" || file.mimetype=="image/jpeg" || file.mimetype=="image/jpg" || file.mimetype=="image/gif"){
             cb(null, true)
         }else{
@@ -35,9 +38,9 @@ var upload = multer({
 
 router.get('/', async function (req, res) {
     const list = await productModel.all();
-    console.log(list);
     res.render('vwProducts/list', {
         products: list,
+        extension: extension,
         empty: list.length === 0
     });
 });
@@ -69,36 +72,16 @@ router.get('/add',async function (req, res) {
 });
 
 router.post('/add', async (req, res) => {
-    //upload file
-    upload(req, res, function (err) {
+    upload(req, res, async function (err) {
         if (err instanceof multer.MulterError) {
           console.log({"kq":0, "errMsg":"A multer error occured when uploading."}); 
         } else if (err) {
           console.log({"kq":0, "errMsg":"An unknown error occurred when uploading." + err});
         }else{
-            //save mongo
-            console.log(req.body);
-            // var marvel = Marvel({
-            //     Name: req.body.txtName,
-            //     Image: req.file.filename,
-            //     Level: req.body.txtLevel
-            // });
-
-            // marvel.save(function(err){
-            //     if(err){
-            //         res.json({"kq":0, "errMsg":error});
-            //     } else{
-            //         res.redirect("/add");
-            //     }
-            // });
-            res.send("done");
+            const result = await productModel.addOne(req.body, _id);
+            res.redirect('./');
         }
-
     });
-    // console.log(req.body);
-    // //const result = await productModel.addOne(req.body);
-    // //console.log(result);
-    // res.redirect('./');
 });
 
 module.exports = router;
