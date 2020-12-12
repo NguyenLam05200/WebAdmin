@@ -65,8 +65,8 @@ module.exports = {
         }, {
             $set: {
             "imgName": data.imgName,
-            "price": data.price,
-            "salePrice": data.salePrice,
+            "price": parseFloat(data.price.replace(",", ".")),
+            "salePrice": parseFloat(data.salePrice.replace(",", ".")),
             "category": data.selectCat,
             "details": data.details
             }
