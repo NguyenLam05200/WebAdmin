@@ -84,4 +84,29 @@ router.post('/add', async (req, res) => {
     });
 });
 
+router.get('/edit', async function (req, res) {
+    const list = await categoryModel.getAll();
+
+    const id = req.query.id || -1;
+    const product = await productModel.getOne(id);
+    console.log(product);
+    res.render('vwProducts/edit', {
+        product,
+        categories: list,
+        empty: list.length === 0
+    });
+})
+
+router.post('/del', async (req, res) => {
+    await productModel.delOne(req.body);
+    res.redirect('./');
+});
+
+router.post('/update', async (req, res) => {
+    console.log(req.body);
+
+    await productModel.patchOne(req.body);
+    res.redirect('./');
+});
+
 module.exports = router;

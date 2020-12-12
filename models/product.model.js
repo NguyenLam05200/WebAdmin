@@ -10,7 +10,7 @@ var mongoose = require("mongoose");
 
 var schemaProduct = new mongoose.Schema({
     _id: ObjectId,
-    name: String,
+    imgName: String,
     price: Number,
     salePrice: Number,
     category: String,
@@ -41,7 +41,7 @@ module.exports = {
         console.log("---" +_id);
         var newPro = new Product({
             _id: _id,
-            name: data.name,
+            imgName: data.imgName,
             price: data.price,
             salePrice: data.salePrice,
             category: data.selectCat,
@@ -50,5 +50,38 @@ module.exports = {
         //console.log(newPro);
         const catCollection = db().collection(nameCollection);
         return await catCollection.insertOne(newPro);
+    },
+    getOne: async (id) => {
+        const catCollection = db().collection(nameCollection);
+        const one = await catCollection.findOne({
+            _id: ObjectId(id)
+        })
+        return one;
+    },
+    patchOne: async (data) => {
+        const catCollection = db().collection(nameCollection);
+        return await catCollection.updateOne({
+            "_id": ObjectId(data._id)
+        }, {
+            $set: {
+            "imgName": data.imgName,
+            "price": data.price,
+            "salePrice": data.salePrice,
+            "category": data.selectCat,
+            "details": data.details
+            }
+        });
+    },
+    delOne: async (data) => {
+        const catCollection = db().collection(nameCollection);
+        var result = null;
+        try {
+            result = await catCollection.deleteOne({
+                "_id": ObjectId(data._id)
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        return result;
     }
 }
