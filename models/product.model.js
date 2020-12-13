@@ -38,7 +38,7 @@ module.exports = {
         return list;
     },
     addOne: async (data, _id) => {
-        console.log("---" +_id);
+        //console.log("---" +_id);
         var newPro = new Product({
             _id: _id,
             imgName: data.imgName,
@@ -64,11 +64,11 @@ module.exports = {
             "_id": ObjectId(data._id)
         }, {
             $set: {
-            "imgName": data.imgName,
-            "price": parseFloat(data.price.replace(",", ".")),
-            "salePrice": parseFloat(data.salePrice.replace(",", ".")),
-            "category": data.selectCat,
-            "details": data.details
+                "imgName": data.imgName,
+                "price": parseFloat(data.price.replace(",", ".")),
+                "salePrice": parseFloat(data.salePrice.replace(",", ".")),
+                "category": data.selectCat,
+                "details": data.details
             }
         });
     },
@@ -83,5 +83,33 @@ module.exports = {
             console.log(e);
         }
         return result;
+    },
+    pageByCat: async (catName, limit, page) => {
+        const proCollection = db().collection(nameCollection);
+        const list = await proCollection.find({
+                "category": catName
+            }).skip((page - 1) * limit)
+            .limit(limit).toArray();
+        //console.log(list);
+        return list;
+    },
+    countByCat: async (catName) => {
+        const proCollection = db().collection(nameCollection);
+        const list = await proCollection.countDocuments({"category":catName});
+        //console.log(list);
+        return list;
+    },
+    countAll: async () => {
+        const proCollection = db().collection(nameCollection);
+        const list = await proCollection.countDocuments({});
+        //console.log(list);
+        return list;
+    },
+    pageAll: async (limit, page) => {
+        const proCollection = db().collection(nameCollection);
+        const list = await proCollection.find({}).skip((page - 1) * limit)
+            .limit(limit).toArray();
+        //console.log(list);
+        return list;
     }
 }
