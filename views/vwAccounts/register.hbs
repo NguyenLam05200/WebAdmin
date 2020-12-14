@@ -3,11 +3,27 @@ Register
 {{/section}}
 
 {{#section 'js'}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
 <script>
+  $('#txtDOB').datetimepicker({
+    format: 'd/m/Y',
+    timepicker: false,
+    mask: true,
+  });
+
+  $('#frmRegister').on('submit', function(e){ //frmRegister: id of form Register
+    e.preventDefault();
+    if(validate())
+      $('#frmRegister').off('submit').submit();
+  })
+
   function validate(){
     return true;
   }
 </script>
+{{/section}}
+{{#section 'css'}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
 {{/section}}
 <div class="card">
   <div class="card-header">
@@ -16,7 +32,7 @@ Register
     </h4>
   </div>
   <div class="card-body">
-    <form method="POST" action="">
+    <form method="POST" action="" id="frmRegister">
       <div class="form-group">
         <label for="txtUsername">
           User name
