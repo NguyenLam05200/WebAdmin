@@ -2,6 +2,7 @@ require("dotenv").config();
 
 const express = require('express');
 const exphbs = require('express-handlebars');
+const hbs_sections = require('express-handlebars-sections');
 require('express-async-errors');
 const numeral = require('numeral');
 
@@ -17,6 +18,7 @@ app.engine('hbs', exphbs({
     partialsDir: 'views/_partials',
     extname: '.hbs',
     helpers: {
+        section: hbs_sections(),
         format_number: function (value){
             return numeral(value).format('$0,0.00');
         }
@@ -55,6 +57,8 @@ app.get('/about', function (req, res) {
 app.use('/admin/categories', require('./routes/category.route'));
 // sản phẩm
 app.use('/admin/products', require('./routes/product.route'));
+app.use('/account', require('./routes/account.route'));
+
 
 // url k tồn tại
 //error 404
