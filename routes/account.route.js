@@ -8,7 +8,43 @@ const config = require('../config/default.json');
 const router = express.Router();
 
 router.get('/login', async function (req, res) {
-    res.render('vwAccounts/login');
+    res.render('vwAccounts/login', {layout:false});
+});
+
+router.post('/login', async function (req, res) {
+    const user  = await userModel.findByUsername(req.body.username);
+    if(user === null) 
+    {
+        return res.render('vwAccounts/login', {
+            layout: false,
+            err: 'Invalid username or password.'
+        });
+    }
+
+    const rs = bcrypt.compareSync(req.body.password, user.password_hash);
+    if(rs===false){
+        return res.render('vwAccounts/login', {
+            layout: false,
+            err: 'Invalid username or password.'
+        });
+    }
+    //session
+    delete user.password_hash;
+    req.session.isAuthenticated = true;
+    req.session.authUser = user;
+    //session
+
+    const url = req.query.retUrl || '/';
+    res.redirect(url);
+});
+
+//session
+const restrict = require('../middlewares/auth.mdw')
+//session
+router.post('/logout',restrict, function (req, res) {
+    req.session.isAuthenticated = false;
+    req.session.authUser = null;
+    res.redirect(req.headers.referer); //đang ở đâu thì đá về chỗ đó
 });
 
 router.get('/register', async function (req, res) {
@@ -30,7 +66,8 @@ router.post('/register', async function (req, res) {
     res.render('vwAccounts/register');
 });
 
-router.get('/profile', async function (req, res) {
+
+router.get('/profile', restrict, async function (req, res) {
     res.render('vwAccounts/profile');
 });
 

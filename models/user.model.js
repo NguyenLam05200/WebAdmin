@@ -50,6 +50,16 @@ module.exports = {
         })
         return one;
     },
+    findByUsername: async (username) => {
+        const catCollection = db().collection(nameCollection);
+        const rows = await catCollection.findOne({
+            username: username
+        })
+        if (rows == null) {
+            return null;
+        }
+        return rows;
+    },
     patchOne: async (entity) => {
         const catCollection = db().collection(nameCollection);
         return await catCollection.updateOne({

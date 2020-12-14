@@ -1,0 +1,88 @@
+<!--[if lt IE 7 ]> <html lang="en" class="ie6 ielt8"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7 ielt8"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en">
+  <!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      Login Baggage
+    </title>
+    <link rel="stylesheet" type="text/css" href="/public/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <section id="content">
+        <form action="" method="POST">
+          <h1>
+            Login
+          </h1>
+          <div>
+            <input
+              type="text"
+              placeholder="Username"
+              required=""
+              id="username"
+              name="username"
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              required=""
+              id="password"
+              name="password"
+            />
+          </div>
+          <div>
+            <input type="submit" value="Log in" />
+            <a href="#">
+              Lost your password?
+            </a>
+            <a href="#">
+              Register
+            </a>
+          </div>
+        </form>
+        <!-- form -->
+        {{#if err}}
+          <div
+            class="alert alert-warning alert-dismissible fade show"
+            role="alert"
+          >
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">
+                ×
+              </span>
+            </button>
+            {{err}}
+          </div>
+        {{/if}}
+      </section>
+      <!-- content -->
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+    ></script>
+    <!-- container -->
+  </body>
+</html>
