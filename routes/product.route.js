@@ -16,6 +16,7 @@ let _id;
 let extension = 'jpg';
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
+        //cb(null, process.env.PRODUCTS_IMAGE_DIR)
         cb(null, 'public/images/products')
     },
     filename: function (req, file, cb) {
@@ -40,10 +41,13 @@ router.get('/', async function (req, res) {
     const limit = config.pagination.limit;
     const page = +req.query.page || 1;
     if (page < 0) page = 1;
-
+    const q =req.query.q;
+    const filter = {};
+    if(q)
+        filter.imgName = new RegExp(q, 'i');
     const [list, total] = await Promise.all([
-        productModel.pageAll(limit, page),
-        productModel.countAll()
+        productModel.page(filter, limit, page),
+        productModel.count(filter)
     ])
 
 
@@ -120,14 +124,26 @@ router.get('/byCat/:catName', async function (req, res) {
     const page = +req.query.page || 1;
     if (page < 0) page = 1;
 
+    const q =req.query.q;
+    const catName = req.params.catName;
+    const filter = {};
+    if(q)
+        filter.imgName = new RegExp(q, 'i');
+    if(catName)
+        filter.category = catName;
+    console.log(filter);
+
+    //2 ham async nay chay song song k lien quan j den nhau =>
     const [list, total] = await Promise.all([
-        productModel.pageByCat(req.params.catName, limit, page),
-        productModel.countByCat(req.params.catName)
+        productModel.page(filter, limit, page),
+        productModel.count(filter)
     ])
 
-
-
-    // const total = await productModel.countByCat(req.params.catName);
+    // const [list, total] = await Promise.all([
+    //     productModel.pageByCat(req.params.catName, limit, page),
+    //     productModel.countByCat(req.params.catName)
+    // ])
+    
     // nav paging, handle over page total
     const nPages = Math.ceil(total / config.pagination.limit);
     const page_items = [];

@@ -84,31 +84,44 @@ module.exports = {
         }
         return result;
     },
-    pageByCat: async (catName, limit, page) => {
+    // pageByCat: async (catName, limit, page) => {
+    //     const proCollection = db().collection(nameCollection);
+    //     const list = await proCollection.find({
+    //             "category": catName
+    //         }).skip((page - 1) * limit)
+    //         .limit(limit).toArray();
+    //     //console.log(list);
+    //     return list;
+    // },
+    // countByCat: async (catName) => {
+    //     const proCollection = db().collection(nameCollection);
+    //     const list = await proCollection.countDocuments({"category":catName});
+    //     //console.log(list);
+    //     return list;
+    // },
+    // countAll: async () => {
+    //     const proCollection = db().collection(nameCollection);
+    //     const list = await proCollection.countDocuments({});
+    //     //console.log(list);
+    //     return list;
+    // },
+    // pageAll: async (limit, page) => {
+    //     const proCollection = db().collection(nameCollection);
+    //     const list = await proCollection.find({}).skip((page - 1) * limit)
+    //         .limit(limit).toArray();
+    //     //console.log(list);
+    //     return list;
+    // },
+    page: async (filter,limit, page) => {
         const proCollection = db().collection(nameCollection);
-        const list = await proCollection.find({
-                "category": catName
-            }).skip((page - 1) * limit)
+        const list = await proCollection.find(filter).skip((page - 1) * limit)
             .limit(limit).toArray();
         //console.log(list);
         return list;
     },
-    countByCat: async (catName) => {
+    count: async (filter) => {
         const proCollection = db().collection(nameCollection);
-        const list = await proCollection.countDocuments({"category":catName});
-        //console.log(list);
-        return list;
-    },
-    countAll: async () => {
-        const proCollection = db().collection(nameCollection);
-        const list = await proCollection.countDocuments({});
-        //console.log(list);
-        return list;
-    },
-    pageAll: async (limit, page) => {
-        const proCollection = db().collection(nameCollection);
-        const list = await proCollection.find({}).skip((page - 1) * limit)
-            .limit(limit).toArray();
+        const list = await proCollection.countDocuments(filter);
         //console.log(list);
         return list;
     }
