@@ -39,7 +39,7 @@
           name="selectCat"
         >
           {{#each categories}}
-            <option value="{{name}}">
+            <option value="{{name}}" {{#if isSelected}}selected{{/if}}>
               {{name}}
             </option>
           {{/each}}

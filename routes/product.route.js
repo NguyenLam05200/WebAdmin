@@ -212,6 +212,7 @@ router.get('/byCat/:catName', async function (req, res) {
 
     // const list = await productModel.pageByCat(req.params.catName, limit, page);
     res.render('vwProducts/byCat', {
+        catName: list[0].category,
         products: list,
         empty: list.length === 0,
         page_items,
@@ -224,6 +225,14 @@ router.get('/byCat/:catName', async function (req, res) {
 
 router.get('/add', async function (req, res) {
     const list = await categoryModel.getAll();
+    const q = req.query.catName;
+    for(let i = 0; i<list.length; i++){
+        if(list[i].name == q){
+            list[i].isSelected = true;
+        } else {
+            list[i].isSelected = false;
+        }
+    }
     fileImageName = null;
     res.render('vwProducts/add', {
         categories: list,
