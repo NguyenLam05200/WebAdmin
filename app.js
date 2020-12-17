@@ -8,6 +8,8 @@ app.use(express.urlencoded({
 }));
 app.use('/public', express.static("public"));
 app.use(express.static("public"));
+app.use(express.static(process.env.PRODUCTS_IMAGE_DIR));
+
 
 require('./middlewares/session.mdw')(app); // require ra function()
 

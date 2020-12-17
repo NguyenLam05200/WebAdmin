@@ -11,6 +11,7 @@ var mongoose = require("mongoose");
 var schemaProduct = new mongoose.Schema({
     _id: ObjectId,
     imgName: String,
+    imgDir: String,
     price: Number,
     salePrice: Number,
     category: String,
@@ -37,11 +38,12 @@ module.exports = {
         //console.log(list);
         return list;
     },
-    addOne: async (data, _id) => {
+    addOne: async (data, _id, fileImageName) => {
         //console.log("---" +_id);
         var newPro = new Product({
             _id: _id,
             imgName: data.imgName,
+            imgDir: fileImageName,
             price: data.price,
             salePrice: data.salePrice,
             category: data.selectCat,

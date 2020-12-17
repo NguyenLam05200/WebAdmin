@@ -27,7 +27,7 @@ Products
           <div class="col-sm-4 mb-3">
             <div class="card h-100">
               <img
-                src="/public/images/products/{{_id}}.jpg"
+                src="{{process.env.PRODUCTS_IMAGE_DIR}}/{{imgDir}}"
                 alt="{{imgName}}"
                 title="{{imgName}}:{{price}}"
                 class="card-img-top"

@@ -13,17 +13,29 @@ const router = express.Router();
 //multer
 var multer = require('multer');
 let _id;
-let extension = 'jpg';
+let extension = null;
+let fileImageName = null;
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        //cb(null, process.env.PRODUCTS_IMAGE_DIR)
-        cb(null, 'public/images/products')
+        cb(null, process.env.PRODUCTS_IMAGE_DIR)
+        //@ts-checkcb(null, 'public/images/products')
     },
     filename: function (req, file, cb) {
-        //let extArray = file.mimetype.split("/");
-        //extension = extArray[extArray.length - 1];
-        _id = new productModel.ObjectId();
-        cb(null, _id.toString() + '.' + extension)
+        //console.log("filenam: " + file.originalname);
+        //if (file.originalname == '') console.log("null nha");
+        //console.log("name truoc: " + fileImageName);
+        if (fileImageName == null) {
+            let extArray = file.mimetype.split("/");
+            extension = extArray[extArray.length - 1];
+            _id = new productModel.ObjectId();
+            fileImageName = _id.toString() + '.' + extension;
+        } else{
+            let extArray = file.mimetype.split("/");
+            extension = extArray[extArray.length - 1];
+            fileImageName+=  '.' + extension;
+        }
+        //console.log("name sau: " + fileImageName);
+        cb(null, fileImageName)
     }
 });
 var upload = multer({
@@ -41,9 +53,9 @@ router.get('/', async function (req, res) {
     const limit = config.pagination.limit;
     const page = +req.query.page || 1;
     if (page < 0) page = 1;
-    const q =req.query.q;
+    const q = req.query.q;
     const filter = {};
-    if(q)
+    if (q)
         filter.imgName = new RegExp(q, 'i');
     const [list, total] = await Promise.all([
         productModel.page(filter, limit, page),
@@ -86,7 +98,7 @@ router.get('/', async function (req, res) {
             page_items.push(item);
         }
         page_items.push(disabledItem);
-        for (let i = nPages-2; i <= nPages; i++) {
+        for (let i = nPages - 2; i <= nPages; i++) {
             const item = {
                 value: i,
                 isActive: i === page
@@ -124,14 +136,14 @@ router.get('/byCat/:catName', async function (req, res) {
     const page = +req.query.page || 1;
     if (page < 0) page = 1;
 
-    const q =req.query.q;
+    const q = req.query.q;
     const catName = req.params.catName;
     const filter = {};
-    if(q)
+    if (q)
         filter.imgName = new RegExp(q, 'i');
-    if(catName)
+    if (catName)
         filter.category = catName;
-    console.log(filter);
+    //console.log(filter);
 
     //2 ham async nay chay song song k lien quan j den nhau =>
     const [list, total] = await Promise.all([
@@ -143,7 +155,7 @@ router.get('/byCat/:catName', async function (req, res) {
     //     productModel.pageByCat(req.params.catName, limit, page),
     //     productModel.countByCat(req.params.catName)
     // ])
-    
+
     // nav paging, handle over page total
     const nPages = Math.ceil(total / config.pagination.limit);
     const page_items = [];
@@ -177,7 +189,7 @@ router.get('/byCat/:catName', async function (req, res) {
             page_items.push(item);
         }
         page_items.push(disabledItem);
-        for (let i = nPages-2; i <= nPages; i++) {
+        for (let i = nPages - 2; i <= nPages; i++) {
             const item = {
                 value: i,
                 isActive: i === page
@@ -212,7 +224,7 @@ router.get('/byCat/:catName', async function (req, res) {
 
 router.get('/add', async function (req, res) {
     const list = await categoryModel.getAll();
-
+    fileImageName = null;
     res.render('vwProducts/add', {
         categories: list,
         empty: list.length === 0
@@ -232,7 +244,8 @@ router.post('/add', async (req, res) => {
                 "errMsg": "An unknown error occurred when uploading." + err
             });
         } else {
-            const result = await productModel.addOne(req.body, _id);
+            //console.log(fileImageName);
+            const result = await productModel.addOne(req.body, _id, fileImageName);
             res.redirect('./');
         }
     });
@@ -240,9 +253,19 @@ router.post('/add', async (req, res) => {
 
 router.get('/edit', async function (req, res) {
     const list = await categoryModel.getAll();
-
+    
     const id = req.query.id || -1;
+    fileImageName = id;
     const product = await productModel.getOne(id);
+    //console.dir(list[0]);
+    for(let i = 0; i<list.length; i++){
+        if(list[i].name == product.category){
+            list[i].isSelected = true;
+        } else {
+            list[i].isSelected = false;
+        }
+    }
+    //console.dir(list);
     //console.log(product);
     res.render('vwProducts/edit', {
         product,
@@ -258,9 +281,25 @@ router.post('/del', async (req, res) => {
 
 router.post('/update', async (req, res) => {
     //console.log(req.body);
-
-    await productModel.patchOne(req.body);
-    res.redirect('./');
+    upload(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            console.log({
+                "kq": 0,
+                "errMsg": "A multer error occured when uploading."
+            });
+        } else if (err) {
+            console.log({
+                "kq": 0,
+                "errMsg": "An unknown error occurred when uploading." + err
+            });
+        } else {
+            //console.log(fileImageName);
+            await productModel.patchOne(req.body);
+            res.redirect('./');
+        }
+    });
+    //await productModel.patchOne(req.body);
+    //res.redirect('./');
 });
 
 module.exports = router;

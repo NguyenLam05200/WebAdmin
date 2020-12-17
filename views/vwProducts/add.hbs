@@ -1,5 +1,10 @@
-{{#section 'title'}}
-Add product
+{{#section "title"}}
+  Add product
+{{/section}}
+{{#section "js"}}
+<script> $('#customFile').on('change', function(){ files = $(this)[0].files; name = ''; for(var i = 0; i < files.length; i++){ name += '\"' + files[i].name + '\"' + (i != files.length-1 ? ", " : ""); } $(".custom-file-label").html(name); });
+</script>
+<script src="/public/fileUpload.js"></script>
 {{/section}}
 <div class="card">
   <div class="card-header">
@@ -8,7 +13,7 @@ Add product
     </h4>
   </div>
   <div class="card-body">
-    <form method="POST" action="" enctype="multipart/form-data">
+    <form method="POST" action="" enctype="multipart/form-data" onsubmit="return Validate(this);">
       <div class="form-group">
         <label for="txtProName">
           Name
@@ -18,14 +23,21 @@ Add product
           class="form-control"
           id="txtProName"
           name="imgName"
+          placeholder="Name of new product"
+          required
           autofocus
         />
+
       </div>
       <div class="form-group">
         <label for="exampleFormControlSelect1">
           Select category
         </label>
-        <select class="form-control" id="exampleFormControlSelect1" name="selectCat">
+        <select
+          class="form-control"
+          id="exampleFormControlSelect1"
+          name="selectCat"
+        >
           {{#each categories}}
             <option value="{{name}}">
               {{name}}
@@ -46,17 +58,18 @@ Add product
           </span>
           <input
             type="number"
-              step=0.01
-              min=0
+            step="0.01"
+            min="0"
             class="form-control"
             id="txtCatName"
             name="price"
+            required
           />
         </div>
       </div>
       <div class="form-group">
         <label for="txtCatName">
-          Sale Price
+          Sale-off Price
         </label>
         <div class="input-group-prepend">
           <span class="input-group-text">
@@ -67,8 +80,8 @@ Add product
           </span>
           <input
             type="number"
-              step=0.01
-              min=0
+            step="0.01"
+            min="0"
             class="form-control"
             id="txtCatName"
             name="salePrice"
@@ -78,12 +91,22 @@ Add product
       <div class="form-group">
         <div class="input-group-prepend">
           <label for="txtCatName">
-          Image of product
-        </label>
+            Image of product
+          </label>
         </div>
+        
         <div class="custom-file">
-          <input type="file" class="custom-file-input" id="customFileLang" lang="en" name="imgProduct">
-          <label class="custom-file-label" for="customFileLang">Choose file</label>
+          <input
+            type="file"
+            class="custom-file-input"
+            id="customFile"
+            lang="en"
+            name="imgProduct"
+              required
+          />
+          <label class="custom-file-label" for="customFile">
+            Choose file
+          </label>
         </div>
       </div>
       <div class="form-group">
@@ -95,6 +118,7 @@ Add product
           id="exampleFormControlTextarea1"
           rows="3"
           name="details"
+            required
         ></textarea>
       </div>
       <a
@@ -109,7 +133,7 @@ Add product
         <i class="fa fa-check" aria-hidden="true"></i>
         Add
       </button>
-      {{!-- <input type="submit" value="Add new"> --}}
+      {{! <input type="submit" value="Add new"> }}
     </form>
   </div>
   <div class="card-footer text-muted">

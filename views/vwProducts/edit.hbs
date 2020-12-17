@@ -1,6 +1,11 @@
 {{#section 'title'}}
 Edit product
 {{/section}}
+{{#section "js"}}
+<script> $('#customFile').on('change', function(){ files = $(this)[0].files; name = ''; for(var i = 0; i < files.length; i++){ name += '\"' + files[i].name + '\"' + (i != files.length-1 ? ", " : ""); } $(".custom-file-label").html(name); });
+</script>
+<script src="/public/fileUpload.js"></script>
+{{/section}}
 <div class="card">
   <div class="card-header">
     <h4>
@@ -8,7 +13,7 @@ Edit product
     </h4>
   </div>
   <div class="card-body">
-    <form method="POST">
+    <form method="POST" onsubmit="return Validate(this);" enctype="multipart/form-data" >
       <div class="form-group">
         <label for="txtCatID">
           _id
@@ -33,6 +38,7 @@ Edit product
           id="txtCatName"
           name="imgName"
           autofocus
+          required
           value="{{this.product.imgName}}"
           {{! cu phap handlebars }}
         />
@@ -47,7 +53,7 @@ Edit product
           name="selectCat"
         >
           {{#each categories}}
-            <option value="{{name}}">
+            <option value="{{name}}" {{#if isSelected}}selected{{/if}}>
               {{name}}
             </option>
           {{/each}}
@@ -71,13 +77,14 @@ Edit product
             class="form-control"
             id="txtCatName"
             name="price"
+            required
             value="{{this.product.price}}"
           />
         </div>
       </div>
       <div class="form-group">
         <label for="txtCatName">
-          Sale Price
+          Sale-off Price
         </label>
         <div class="input-group-prepend">
           <span class="input-group-text">
@@ -93,8 +100,29 @@ Edit product
             class="form-control"
             id="txtCatName"
             name="salePrice"
+            required
             value="{{this.product.salePrice}}"
           />
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="input-group-prepend">
+          <label for="txtCatName">
+            Image of product
+          </label>
+        </div>
+        
+        <div class="custom-file">
+          <input
+            type="file"
+            class="custom-file-input"
+            id="customFile"
+            lang="en"
+            name="imgProduct"
+          />
+          <label class="custom-file-label" for="customFile">
+            {{this.product.imgDir}}
+          </label>
         </div>
       </div>
       <div class="form-group">

@@ -1,9 +1,7 @@
 const exphbs = require('express-handlebars');
 const hbs_sections = require('express-handlebars-sections');
 const numeral = require('numeral');
-const hbshelpers = require("handlebars-helpers");
 
-const multihelper = hbshelpers();
 
 module.exports = function(app){
     app.engine('hbs', exphbs({
@@ -12,7 +10,6 @@ module.exports = function(app){
         partialsDir: 'views/_partials',
         extname: '.hbs',
         helpers: {
-            multihelper,
             section: hbs_sections(),
             format_number: function (value) {
                 return numeral(value).format('$0,0.00');
