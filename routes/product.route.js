@@ -1,4 +1,8 @@
 const express = require('express');
+const queryString = require('query-string');
+var multer = require('multer');
+
+
 const productModel = require('../models/product.model');
 const categoryModel = require('../models/category.model');
 const config = require('../config/default.json');
@@ -11,7 +15,6 @@ const router = express.Router();
 
 
 //multer
-var multer = require('multer');
 let _id;
 let extension = null;
 let fileImageName = null;
@@ -118,14 +121,19 @@ router.get('/', async function (req, res) {
     // list.map(function (p){
     //     p.f_price = '$' + p.price ;
     // })
-
+    console.log(req.query);
     // const list = await productModel.pageByCat(req.params.catName, limit, page);
+    const nextQuery = {...req.query, page: page+1};//...req.query: lấy all thuộc tính object query hiện tại đổ vào nextQuery, sửa thuộc tính page thành page mới.
+    const prevQuery = {...req.query, page: page-1};
+    console.log(nextQuery);
     res.render('vwProducts/list', {
         products: list,
         empty: list.length === 0,
         page_items,
         prev_value: page - 1,
+        prevPageQueryString: queryString.stringify(prevQuery), //=?pagep{{prev_value}}
         next_value: page + 1,
+        nextPageQueryString: queryString.stringify(nextQuery), //
         can_go_prev: page > 1,
         can_go_next: page < nPages
     });
