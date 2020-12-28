@@ -1,20 +1,23 @@
 const express = require('express');
 const moment = require('moment');
-const bcrypt  = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const userModel = require('../models/user.model')
 const config = require('../config/default.json');
-
+const passport = require('../passport');
 
 const router = express.Router();
 
 router.get('/login', async function (req, res) {
-    res.render('vwAccounts/login', {layout:false});
+    res.render('vwAccounts/login', {
+        layout: false
+    });
 });
 
+//ok theo cách cũ login k dùng passport
+/*
 router.post('/login', async function (req, res) {
-    const user  = await userModel.findByUsername(req.body.username);
-    if(user === null) 
-    {
+    const user = await userModel.findByUsername(req.body.username);
+    if (user === null) {
         return res.render('vwAccounts/login', {
             layout: false,
             err: 'Invalid username or password.'
@@ -22,7 +25,7 @@ router.post('/login', async function (req, res) {
     }
 
     const rs = bcrypt.compareSync(req.body.password, user.password_hash);
-    if(rs===false){
+    if (rs === false) {
         return res.render('vwAccounts/login', {
             layout: false,
             err: 'Invalid username or password.'
@@ -38,10 +41,18 @@ router.post('/login', async function (req, res) {
     res.redirect(url);
 });
 
+*/
+
+router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/login',
+    failureFlash: false
+}))
+
 //session
 const restrict = require('../middlewares/auth.mdw')
 //session
-router.post('/logout',restrict, function (req, res) {
+router.post('/logout', restrict, function (req, res) {
     req.session.isAuthenticated = false;
     req.session.authUser = null;
     res.redirect(req.headers.referer); //đang ở đâu thì đá về chỗ đó

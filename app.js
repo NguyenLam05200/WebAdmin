@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require('express');
+const session = require('express-session'); //thường thì express.session là đủ nhưng express 4 k có nên phải install như vầy
 
 const app = express();
 
@@ -11,13 +12,22 @@ app.use(express.static("public"));
 app.use(express.static(process.env.PRODUCTS_IMAGE_DIR));
 
 
-require('./middlewares/session.mdw')(app); // require ra function()
+//passport
+const passport =  require('./passport');
+//passport middlewares
+app.use(session({ secret: process.env.SESSION_SECRET || 'keyboard cat'})); //để encrypt session
+app.use(passport.initialize()); //đăng kí gói passport để express sd cho đúng
+app.use(passport.session()); //đăng kí express session
+
+//require('./middlewares/session.mdw')(app); // require ra function()
 
 require('./middlewares/view.mdw')(app); // require ra function()
 
 //phân chia vùng view có thể xem (session)
 require('./middlewares/locals.mdw')(app); // require ra function()
 
+
+//Routes
 app.get('/', function (req, res) {
     res.render('home');
 })

@@ -1,3 +1,5 @@
+const bcrypt  = require('bcryptjs');
+
 const {
     db
 } = require('../utils/db');
@@ -40,19 +42,19 @@ module.exports = {
             permission: entity.permission
         });
         //console.log(newPro);
-        const catCollection = db().collection(nameCollection);
-        return await catCollection.insertOne(newUser);
+        const userCollection = db().collection(nameCollection);
+        return await userCollection.insertOne(newUser);
     },
     getOne: async (id) => {
-        const catCollection = db().collection(nameCollection);
-        const one = await catCollection.findOne({
+        const userCollection = db().collection(nameCollection);
+        const one = await userCollection.findOne({
             _id: ObjectId(id)
         })
         return one;
     },
     findByUsername: async (username) => {
-        const catCollection = db().collection(nameCollection);
-        const rows = await catCollection.findOne({
+        const userCollection = db().collection(nameCollection);
+        const rows = await userCollection.findOne({
             username: username
         })
         if (rows == null) {
@@ -61,8 +63,8 @@ module.exports = {
         return rows;
     },
     patchOne: async (entity) => {
-        const catCollection = db().collection(nameCollection);
-        return await catCollection.updateOne({
+        const userCollection = db().collection(nameCollection);
+        return await userCollection.updateOne({
             "_id": ObjectId(entity._id)
         }, {
             $set: {
@@ -76,15 +78,38 @@ module.exports = {
         });
     },
     delOne: async (id) => {
-        const catCollection = db().collection(nameCollection);
+        const userCollection = db().collection(nameCollection);
         var result = null;
         try {
-            result = await catCollection.deleteOne({
+            result = await userCollection.deleteOne({
                 "_id": ObjectId(id)
             });
         } catch (e) {
             console.log(e);
         }
         return result;
+    },
+    /**
+     * Check for valid username and password. Return user info if is valid.
+     * @param {*} username 
+     * @param {*} password 
+     */
+    checkCredential: async (username, password) =>{
+        const userCollection = db().collection(nameCollection);
+        const user = await userCollection.findOne({username});
+        if(!user) return false;
+        let checkPassword = await bcrypt.compare(password, user.password_hash);
+        if(checkPassword){
+            return user;    
+        }
+        return false;
+    },
+    getUser: (id) => {
+        const userCollection = db().collection(nameCollection);
+        const user = userCollection.findOne({
+            _id: ObjectId(id)
+        });
+        //console.dir(user);
+        return user;
     }
 }
