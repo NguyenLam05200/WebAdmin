@@ -1,9 +1,15 @@
 module.exports = function restrict(req, res, next) {
-    if (!req.session.isAuthenticated) {
+    
+    if (!req.user) {
         return res.redirect(`/account/login?retUrl=${req.originalUrl}`);
+        //return res.redirect(`http://localhost:3000/home`);
+
         // chú ý dấu ``
         //đá về trang login kèm địa chỉ trước đó ng ta truy cập, 
         //nếu k (xxx > login > post login thì đc trước đó là login)
+    }
+    if(!req.user.isVerified){
+        return res.redirect(`/account/login?notification=1`);
     }
     next();
 }

@@ -24,6 +24,7 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (id, done) {
     userModel.getUser(id).then((user) => {
+        delete user.password_hash;
         done(null, user);
     });
 });

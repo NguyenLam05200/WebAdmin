@@ -4,7 +4,7 @@ const {
 const {
     ObjectId
 } = require('mongodb');
-const nameCollection = "Products";
+const nameCollection = "products";
 
 var mongoose = require("mongoose");
 
@@ -15,6 +15,7 @@ var schemaProduct = new mongoose.Schema({
     price: Number,
     salePrice: Number,
     category: String,
+    design: String,
     details: String
 });
 
@@ -38,15 +39,16 @@ module.exports = {
         //console.log(list);
         return list;
     },
-    addOne: async (data, _id, fileImageName) => {
+    addOne: async (data, _id, extension) => {
         //console.log("---" +_id);
         var newPro = new Product({
             _id: _id,
             imgName: data.imgName,
-            imgDir: fileImageName,
+            imgDir: extension,
             price: data.price,
             salePrice: data.salePrice,
             category: data.selectCat,
+            design: data.design,
             details: data.details
         });
         //console.log(newPro);
@@ -70,6 +72,7 @@ module.exports = {
                 "price": parseFloat(data.price.replace(",", ".")),
                 "salePrice": parseFloat(data.salePrice.replace(",", ".")),
                 "category": data.selectCat,
+                "design" : data.design,
                 "details": data.details
             }
         });

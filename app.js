@@ -8,8 +8,11 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use('/public', express.static("public"));
-app.use(express.static("public"));
+app.use('E:/Baggage-Shop/public', express.static("E:/Baggage-Shop/public"));
+app.use(express.static('E:/Baggage-Shop/public'));
+app.use(express.static('public'));
 app.use(express.static(process.env.PRODUCTS_IMAGE_DIR));
+app.use(express.static(process.env.PROFILES_IMAGE_DIR));
 
 
 //passport
@@ -32,15 +35,16 @@ app.get('/', function (req, res) {
     res.render('home');
 })
 
-app.get('/about', function (req, res) {
-    res.render('about');
+app.get('/contact', function (req, res) {
+    res.render('contact');
 })
 
+const restrict = require('./middlewares/auth.mdw')
 
 // thể loại
-app.use('/admin/categories', require('./routes/category.route'));
+app.use('/admin/categories',restrict, require('./routes/category.route'));
 // sản phẩm
-app.use('/admin/products', require('./routes/product.route'));
+app.use('/admin/products',restrict, require('./routes/product.route'));
 // đăng kí, đăng nhập, profile
 app.use('/account', require('./routes/account.route'));
 

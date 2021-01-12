@@ -1,4 +1,4 @@
-const bcrypt  = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const {
     db
@@ -6,22 +6,47 @@ const {
 const {
     ObjectId
 } = require('mongodb');
-const nameCollection = "Users";
+const nameCollection = "admins";
+const nameCollectionToken = "tokens";
 
 var mongoose = require("mongoose");
 
-var schemaUser = new mongoose.Schema({
+// var schemaAdmin = new mongoose.Schema({
+//     username: String,
+//     password_hash: String,
+//     email: String,
+//     dob: Date,
+//     permission: Number
+// });
+
+var schemaAdmin = new mongoose.Schema({
     username: String,
-    password_hash: String,
-    name: String,
-    email: String,
+    email: {
+        type: String,
+        unique: true
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    phone: { type: Number, default: null },
+    avatar: { type: String, default: "" },
+    permission: Number,
     dob: Date,
-    permission: Number
+    password_hash: String,
+    passwordResetToken: String,
+    passwordResetExpires: Date
 });
 
+const schemaToken = new mongoose.Schema({
+    _userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: nameCollection },
+    token: { type: String, required: true },
+    createdAt: { type: Date, required: true, default: Date.now, expires: 43200 }
+});
 
 // compile schema to model
-const User = mongoose.model(nameCollection, schemaUser);
+const User = mongoose.model(nameCollection, schemaAdmin);
+const Token = mongoose.model(nameCollectionToken, schemaToken);
 
 module.exports = {
     ObjectId,
@@ -36,8 +61,8 @@ module.exports = {
         var newUser = new User({
             username: entity.username,
             password_hash: entity.password_hash,
-            name: entity.name,
             email: entity.email,
+            phone: entity.phone,
             dob: entity.dob,
             permission: entity.permission
         });
@@ -45,10 +70,27 @@ module.exports = {
         const userCollection = db().collection(nameCollection);
         return await userCollection.insertOne(newUser);
     },
+    addOneToken: async (entity) => {
+        //console.log("---" +_id);
+        var newToken = new Token({
+            _userId: entity._userId,
+            token: entity.token
+        });
+        //console.log(newPro);
+        const tokenCollection = db().collection(nameCollectionToken);
+        return await tokenCollection.insertOne(newToken);
+    },
     getOne: async (id) => {
         const userCollection = db().collection(nameCollection);
         const one = await userCollection.findOne({
             _id: ObjectId(id)
+        })
+        return one;
+    },
+    getOneToken: async (token) => {
+        const tokenCollection = db().collection(nameCollectionToken);
+        const one = await tokenCollection.findOne({
+            token: token
         })
         return one;
     },
@@ -62,18 +104,48 @@ module.exports = {
         }
         return rows;
     },
-    patchOne: async (entity) => {
+    findOneByEmail: async (email) => {
+        const userCollection = db().collection(nameCollection);
+        const rows = await userCollection.findOne({
+            email: email
+        })
+        if (rows == null) {
+            return null;
+        }
+        return rows;
+    },
+    findOneByFilter: async (filter) => {
+        const userCollection = db().collection(nameCollection);
+        const rows = await userCollection.findOne(filter)
+        if (rows == null) {
+            return null;
+        }
+        return rows;
+    },
+    verifyOK: async (_id) => {
         const userCollection = db().collection(nameCollection);
         return await userCollection.updateOne({
-            "_id": ObjectId(entity._id)
+            "_id": ObjectId(_id)
+        }, {
+            $set: {
+                "isVerified": true
+            }
+        });
+    },
+    patchOne: async (_id, entity, avatar) => {
+        const userCollection = db().collection(nameCollection);
+        //console.log(_id);
+        return await userCollection.updateOne({
+            "_id": ObjectId(_id)
         }, {
             $set: {
                 "username": entity.username,
-                "password_hash": entity.password_hash,
-                "name": entity.name,
+                //"password_hash": entity.password_hash,
                 "email": entity.email,
+                "avatar": avatar,
                 "dob": entity.dob,
-                "permission": parseInt(entity.permission)
+                "phone": entity.phone
+                //"permission": parseInt(entity.permission)
             }
         });
     },
@@ -94,13 +166,15 @@ module.exports = {
      * @param {*} username 
      * @param {*} password 
      */
-    checkCredential: async (username, password) =>{
+    checkCredential: async (email, password) => {
         const userCollection = db().collection(nameCollection);
-        const user = await userCollection.findOne({username});
-        if(!user) return false;
+        const user = await userCollection.findOne({
+            email
+        });
+        if (!user) return false;
         let checkPassword = await bcrypt.compare(password, user.password_hash);
-        if(checkPassword){
-            return user;    
+        if (checkPassword) {
+            return user;
         }
         return false;
     },

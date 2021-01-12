@@ -6,8 +6,14 @@ module.exports = function(app){
         if(req.session.isAuthenticated === null){
             req.session.isAuthenticated = false;
         }
-        res.locals.lcIsAuthenticated = req.session.isAuthenticated ;
-        res.locals.lcAuthUser = req.session.authUser;
+        // res.locals.lcIsAuthenticated = req.session.isAuthenticated ;
+        // res.locals.lcAuthUser = req.session.authUser;
+        //res.locals.lcIsAuthenticated = !req.user.anonymous ;
+      
+        res.locals.lcAuthUser = req.user;
+        res.locals.productsImageDir = process.env.PRODUCTS_IMAGE_DIR;
+        res.locals.profilesImageDir = process.env.PROFILES_IMAGE_DIR;
+
         next();
     })
     
