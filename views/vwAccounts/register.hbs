@@ -166,10 +166,9 @@ function verifyPassword() {
      document.getElementById("message").innerHTML = "**Fill the password please!";  
      return false;  
   }  
-   
  //minimum password length validation  
-  if(pw.length < 8) {  
-     document.getElementById("message").innerHTML = "**Password length must be atleast 8 characters";  
+  if(pw.length < 6) {  
+     document.getElementById("message").innerHTML = "**Password length must be atleast 6 characters";  
      return false;  
   }  
   

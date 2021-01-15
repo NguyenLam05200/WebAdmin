@@ -8,6 +8,7 @@ const {
 } = require('mongodb');
 const nameCollection = "admins";
 const nameCollectionToken = "tokens";
+const nameCollectionUsers = "users"
 
 var mongoose = require("mongoose");
 
@@ -185,5 +186,19 @@ module.exports = {
         });
         //console.dir(user);
         return user;
+    },
+    page: async (filter,limit, page) => {
+        const proCollection = db().collection(nameCollectionUsers);
+        const list = await proCollection.find(filter).skip((page - 1) * limit)
+            .limit(limit).toArray();
+        //console.log(list);
+        return list;
+    },
+    count: async (filter) => {
+        const proCollection = db().collection(nameCollectionUsers);
+        const list = await proCollection.countDocuments(filter);
+        //console.log(list);
+        return list;
     }
+
 }
