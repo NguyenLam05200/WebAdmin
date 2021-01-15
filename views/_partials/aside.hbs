@@ -60,8 +60,10 @@
       >
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+
+        <!-- Products management -->
         <li class="nav-item menu-open">
-          <a href="/admin/products/" class="nav-link active">
+          <a href="/admin/products/" class="nav-link">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
               Categories
@@ -84,6 +86,32 @@
             {{/each}}
           </ul>
         </li>
+        
+        <!-- Users management -->
+        <li class="nav-item menu-open">
+          <a href="/admin/users/" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>
+              Users
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a
+                  href="/admin/users"
+                  class="nav-link" 
+                >
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    All 
+                  </p>
+                </a>
+              </li>
+          </ul>
+        </li>
+
+
         <li class="nav-item">
           <a href="pages/widgets.html" class="nav-link">
             <i class="nav-icon fas fa-th"></i>

@@ -43,8 +43,13 @@ const restrict = require('./middlewares/auth.mdw')
 
 // thể loại
 app.use('/admin/categories',restrict, require('./routes/category.route'));
+
 // sản phẩm
 app.use('/admin/products',restrict, require('./routes/product.route'));
+
+// các khách hàng
+app.use('/admin/users',restrict, require('./routes/user.route'));
+
 // đăng kí, đăng nhập, profile
 app.use('/account', require('./routes/account.route'));
 

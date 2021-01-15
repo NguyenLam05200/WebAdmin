@@ -29,7 +29,7 @@
     <div class="card-body register-card-body">
       <p class="login-box-msg">{{notification}} <br /> Register a new membership</p>
 
-      <form action="" method="post">
+      <form action="" method="post" id="frmRegister">
         {{!-- <div class="input-group mb-3">
           <input type="text" class="form-control" placeholder="Full name" id="txtUsername"
             name="username"
@@ -61,13 +61,15 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password" id="txtPassword"
+          <input type="password" class="form-control" placeholder="Password" id="pswd"
             name="password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
             </div>
           </div>
+          <span id = "message" style="color:red"> </span> <br><br>  
+
         </div>
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="Retype password" 
@@ -108,7 +110,7 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
+            <button type="submit" class="btn btn-primary btn-block" name="submitb" value="Submit" onClick="javascript:verifyPassword()">Register</button>
           </div>
           <!-- /.col -->
         </div>
@@ -150,13 +152,35 @@
 
   $('#frmRegister').on('submit', function(e){ //frmRegister: id of form Register
     e.preventDefault();
-    if(validate())
+    if(verifyPassword())
       $('#frmRegister').off('submit').submit();
   })
 
-  function validate(){
-    return true;
-  }
-</script>
+
+
+function verifyPassword() {  
+  var pw = document.getElementById("pswd").value; 
+  console.log(pw); 
+  //check empty password field  
+  if(pw == "") {  
+     document.getElementById("message").innerHTML = "**Fill the password please!";  
+     return false;  
+  }  
+   
+ //minimum password length validation  
+  if(pw.length < 8) {  
+     document.getElementById("message").innerHTML = "**Password length must be atleast 8 characters";  
+     return false;  
+  }  
+  
+//maximum length of password validation  
+  if(pw.length > 15) {  
+     document.getElementById("message").innerHTML = "**Password length must not exceed 15 characters";  
+     return false;  
+  } else {  
+     return true;
+  }  
+}  
+</script> 
 </body>
 </html>
