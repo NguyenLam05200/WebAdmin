@@ -25,18 +25,7 @@ router.get('/login', async function (req, res) {
     if (req.query.notification === "2") {
         notification = 'The account has been verified.';
     }
-    if (req.query.notification === "1") {
-        notification = 'Your account is not verified!';
-        err = "Your account is not verified!";
-    }
-    if (req.query.notification === "1") {
-        notification = 'Your account is not verified!';
-        err = "Your account is not verified!";
-    }
-    if (req.query.notification === "1") {
-        notification = 'Your account is not verified!';
-        err = "Your account is not verified!";
-    }
+    
     res.render('vwAccounts/login', {
         notification,
         layout: false,

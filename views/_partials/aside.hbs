@@ -18,7 +18,11 @@
       <a href="/account/profile" class="d-block">
         <div class="image">
           <img
-            src="/public/dist/img/user2-160x160.jpg"
+            {{#if lcAuthUser.avatar}}
+            src="{{process.env.PROFILES_IMAGE_DIR_FIXED}}/{{lcAuthUser._id}}.{{lcAuthUser.avatar}}"
+            {{else}}
+            src="{{process.env.PROFILES_IMAGE_DIR_FIXED}}/default.jpg"
+            {{/if}}
             class="img-circle elevation-2"
             alt="User Image"
           />
