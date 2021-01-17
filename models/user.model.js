@@ -259,6 +259,13 @@ module.exports = {
         const list = await proCollection.countDocuments(filter);
         //console.log(list);
         return list;
+    },
+    searchAdmin: async (search) => {
+        const proCollection = db().collection(nameCollection);
+        const valueSearch = new RegExp(search, 'i');
+        const list = await proCollection.find({username: {$regex: valueSearch}}).toArray();
+        //console.log(list);
+        return list;
     }
 
 }

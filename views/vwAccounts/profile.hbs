@@ -12,6 +12,27 @@
 <script> $('#customFileDetails2').on('change', function(){ files = $(this)[0].files; name = ''; for(var i = 0; i < files.length; i++){ name += '\"' + files[i].name + '\"' + (i != files.length-1 ? ", " : ""); } $(".custom-file-label.details2").html(name); });
 </script>
 <script src="/public/fileUpload.js"></script>
+<script>
+	function previewFile(input) {
+        var file = $("input[type=file]").get(0).files[0];
+        var pattern = /image-*/;
+
+        if (file && file.type.match(pattern)) {
+            var reader = new FileReader();
+
+            reader.onload = function () {
+                $("#previewImg").attr("src", reader.result);
+            }
+
+            reader.readAsDataURL(file);
+            return true;
+        } else {
+            alert('Only allowed to upload image!!!');
+            return false;
+        }
+
+    }
+</script>
 {{/section}}
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
@@ -64,15 +85,19 @@
 								src="{{imgDirParents}}/default.jpg"
 								{{/if}}
 								alt="Baggage Admin"
+								id="previewImg"
 							/>
+							<label>
 							<input
 								type="file"
 								class="custom-file-input"
 								id="customFileMain"
 								lang="en"
 								name="imgAvatar"
+								onchange='return previewFile(this);'
 							/>
-							change avatar
+							<span>Upload avatar&hellip;</span>
+							</label>
 							</div>
 							<h5 class="user-name">
 							{{lcAuthUser.username}}
