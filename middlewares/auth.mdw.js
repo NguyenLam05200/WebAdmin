@@ -11,6 +11,10 @@ module.exports = function restrict(req, res, next) {
     if(!req.user.isVerified){
         return res.redirect(`/account/login?notification=1`);
     }
+    if(!(req.user.permission >= 1) ){
+        return res.redirect(`/account/login?notification=3`);
+    }
     next();
 }
+
 //nếu thêm trường quyền hạn thì thêm 1 function y như trên nhưng biến tấu thêm thôi

@@ -7,11 +7,11 @@ Users management
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1 class="m-0">Users</h1>
+          <h1 class="m-0">Other Admins</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="./byCat/All">Users</a></li>
+            <li class="breadcrumb-item"><a href="">Other Admins</a></li>
             <li class="breadcrumb-item active">List</li>
           </ol>
         </div><!-- /.col -->
@@ -55,9 +55,9 @@ Users management
                     <thead>
                       <tr>
                         <th aria-readonly="true">ID</th>
-                        <th>User</th>
+                        <th>Admin's Name</th>
                         <th>Email</th>
-                        <th>Status</th>
+                        <th>Position</th>
                         <th>Handles</th>
                       </tr>
                     </thead>
@@ -67,8 +67,55 @@ Users management
                         <td>{{_id}}</td>
                         <td>{{username}}</td>
                         <td>{{email}}</td>
-                        <td><span class="tag tag-success">Active</span></td>
-                        <td>..</td>
+                        <td><span class="tag tag-success">
+                          {{position}}
+                        </span></td>
+                        <td>
+                          <a
+                            class="btn btn-sm btn-success"
+                            href="/admin/management/otherAdmins?id={{this._id}}"
+                            role="button "
+                          >
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                            Details
+                          </a>
+                          {{#if unBlock}}
+                            <a
+                              name=""
+                              id=""
+                              {{#if canBlock}}
+                              class="btn btn-warning btn-sm"
+                              {{else}}
+                              class="btn btn-warning btn-sm disabled"
+                              {{/if}}
+                              href="/admin/management/unblockAdmin?id={{this._id}}"
+                              role="button"
+                              title="Edit Product"
+                            >
+                              <i class="fa fa-pencil" aria-hidden="true">
+                                Unblock
+                              </i>
+                            </a> 
+                          {{else}}
+                            <a
+                              name=""
+                              id=""
+                              {{#if canBlock}}
+                              class="btn btn-warning btn-sm"
+                              {{else}}
+                              class="btn btn-warning btn-sm disabled"
+                              {{/if}}
+                              href="/admin/management/blockAdmin?id={{this._id}}"
+                              role="button"
+                              title="Edit Product"
+                            >
+                              <i class="fa fa-pencil" aria-hidden="true">
+                                Block
+                              </i>
+                            </a> 
+                          {{/if}}
+                           
+                        </td>
                       </tr>
                     {{/each}}
                     </tbody>

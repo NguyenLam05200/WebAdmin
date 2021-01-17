@@ -48,7 +48,7 @@ app.use('/admin/categories',restrict, require('./routes/category.route'));
 app.use('/admin/products',restrict, require('./routes/product.route'));
 
 // các khách hàng
-app.use('/admin/users',restrict, require('./routes/user.route'));
+app.use('/admin/management',restrict, require('./routes/user.route'));
 
 // đăng kí, đăng nhập, profile
 app.use('/account', require('./routes/account.route'));

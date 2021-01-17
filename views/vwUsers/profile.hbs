@@ -58,8 +58,8 @@
 						<div class="user-profile">
 							<div class="user-avatar">
 							<img
-								{{#if lcAuthUser.avatar}}
-								src="{{imgDirParents}}/{{lcAuthUser._id}}.{{lcAuthUser.avatar}}"
+								{{#if userDetails.avatar}}
+								src="{{imgDirParents}}/{{userDetails._id}}.{{userDetails.avatar}}"
 								{{else}}
 								src="{{imgDirParents}}/default.jpg"
 								{{/if}}
@@ -72,13 +72,12 @@
 								lang="en"
 								name="imgAvatar"
 							/>
-							change avatar
 							</div>
 							<h5 class="user-name">
-							{{lcAuthUser.username}}
+							{{userDetails.username}}
 							</h5>
 							<h6 class="user-email">
-							{{lcAuthUser.email}}
+							{{userDetails.email}}
 							</h6>
 						</div>
 						<div class="about">
@@ -87,7 +86,7 @@
 							</h5>
 							<p>
 							I'm
-							{{lcAuthUser.username}}
+							{{userDetails.username}}
 							. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.
 							</p>
 						</div>
@@ -114,7 +113,7 @@
 								class="form-control"
 								id="fullName"
 								placeholder="Enter full name"
-								value="{{lcAuthUser.username}}"
+								value="{{userDetails.username}}"
 									name="username"
 							/>
 							</div>
@@ -129,7 +128,7 @@
 								class="form-control"
 								id="eMail"
 								placeholder="Enter email ID"
-								value="{{lcAuthUser.email}}"
+								value="{{userDetails.email}}"
 									name="email"
 							/>
 							</div>
@@ -144,7 +143,11 @@
 								class="form-control"
 								id="phone"
 								placeholder="Enter phone number"
-								value="{{lcAuthUser.phone}}"
+								{{#if userDetails.phone}}
+								value=" {{userDetails.phone}} "
+								{{else}}
+								value=" not update"
+								{{/if}}
 									name="phone"
 							/>
 							</div>
@@ -159,7 +162,7 @@
 								class="form-control"
 								id="website"
 								placeholder="Website url"
-								value="{{lcAuthUser.dob}}"
+								value="{{userDetails.dob}}"
 								name="dob"
 							/>
 							</div>
@@ -176,17 +179,38 @@
 								title="Back to List"
 								{{! href="/admin/products/byCat/All" }}
 							>
-								<i aria-hidden="true">Cancel</i>
+								<i aria-hidden="true">Back</i>
 							</a>
-							<button
-							type="submit"
-							class="btn btn-primary"
-							formaction="/account/updateProfile"
-							>
-							{{! nếu submit k có formaction thì lấy action từ form gốc, nếu có formaction thì nút submit đó chỉ xử lí bằng formaction đó thôi }}
-							<i class="fa fa-check" aria-hidden="true"></i>
-							Update
-							</button>
+							{{#if userDetails.unBlock}}
+								<button
+								type="submit"
+								{{#if userDetails.canBlock}}
+									class="btn btn-primary"
+								{{else}}
+									class="btn btn-primary disabled"
+								{{/if}}
+								formaction="/admin/management/unblockAdmin?id={{userDetails._id}}"
+								>
+								{{! nếu submit k có formaction thì lấy action từ form gốc, nếu có formaction thì nút submit đó chỉ xử lí bằng formaction đó thôi }}
+								<i class="fa fa-check" aria-hidden="true"></i>
+								Unblock
+								</button>
+							{{else}}
+								<button
+								type="submit"
+								{{#if userDetails.canBlock}}
+									class="btn btn-primary"
+								{{else}}
+									class="btn btn-primary disabled"
+								{{/if}}
+								formaction="/admin/management/blockAdmin?id={{userDetails._id}}"
+								>
+								{{! nếu submit k có formaction thì lấy action từ form gốc, nếu có formaction thì nút submit đó chỉ xử lí bằng formaction đó thôi }}
+								<i class="fa fa-check" aria-hidden="true"></i>
+								Block
+								</button>
+							{{/if}}
+							
 							</div>
 						</div>
 						</div>

@@ -81,8 +81,15 @@ module.exports = {
         const tokenCollection = db().collection(nameCollectionToken);
         return await tokenCollection.insertOne(newToken);
     },
-    getOne: async (id) => {
+    getOneAdmin: async (id) => {
         const userCollection = db().collection(nameCollection);
+        const one = await userCollection.findOne({
+            _id: ObjectId(id)
+        })
+        return one;
+    },
+    getOneUser: async (id) => {
+        const userCollection = db().collection(nameCollectionUsers);
         const one = await userCollection.findOne({
             _id: ObjectId(id)
         })
@@ -130,6 +137,46 @@ module.exports = {
         }, {
             $set: {
                 "isVerified": true
+            }
+        });
+    },
+    blockAdmin: async (_id) => {
+        const userCollection = db().collection(nameCollection);
+        return await userCollection.updateOne({
+            "_id": ObjectId(_id)
+        }, {
+            $set: {
+                "permission": "-1"
+            }
+        });
+    },
+    unblockAdmin: async (_id) => {
+        const userCollection = db().collection(nameCollection);
+        return await userCollection.updateOne({
+            "_id": ObjectId(_id)
+        }, {
+            $set: {
+                "permission": "1"
+            }
+        });
+    },
+    blockUser: async (_id) => {
+        const userCollection = db().collection(nameCollectionUsers);
+        return await userCollection.updateOne({
+            "_id": ObjectId(_id)
+        }, {
+            $set: {
+                "isActive": false
+            }
+        });
+    },
+    unblockUser: async (_id) => {
+        const userCollection = db().collection(nameCollectionUsers);
+        return await userCollection.updateOne({
+            "_id": ObjectId(_id)
+        }, {
+            $set: {
+                "isActive": true
             }
         });
     },
@@ -187,15 +234,28 @@ module.exports = {
         //console.dir(user);
         return user;
     },
-    page: async (filter,limit, page) => {
+    pageUsers: async (filter,limit, page) => {
         const proCollection = db().collection(nameCollectionUsers);
         const list = await proCollection.find(filter).skip((page - 1) * limit)
             .limit(limit).toArray();
         //console.log(list);
         return list;
     },
-    count: async (filter) => {
+    countUsers: async (filter) => {
         const proCollection = db().collection(nameCollectionUsers);
+        const list = await proCollection.countDocuments(filter);
+        //console.log(list);
+        return list;
+    },
+    pageAdmins: async (filter,limit, page) => {
+        const proCollection = db().collection(nameCollection);
+        const list = await proCollection.find(filter).skip((page - 1) * limit)
+            .limit(limit).toArray();
+        //console.log(list);
+        return list;
+    },
+    countAdmins: async (filter) => {
+        const proCollection = db().collection(nameCollection);
         const list = await proCollection.countDocuments(filter);
         //console.log(list);
         return list;

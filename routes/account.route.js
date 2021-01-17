@@ -25,6 +25,9 @@ router.get('/login', async function (req, res) {
     if (req.query.notification === "2") {
         notification = 'The account has been verified.';
     }
+    if (req.query.notification === "3") {
+        notification = 'Your account is blocked or not be granted admin. Please check again!';
+    }
     
     res.render('vwAccounts/login', {
         notification,
